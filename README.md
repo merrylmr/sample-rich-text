@@ -6,7 +6,12 @@
 
 使用div.contenteditable="true"实现插入字符、文字上标、下标；
 
-文字上标、下标：只能是相同的父文本节点才阔以。不同的还在探索中...
+文字上标、下标：起始父节点和结束父节点相同才阔以。不同的还在探索中...
+
+## 知识点
+
+* getSelection、range对象属性
+
 
 ## Build Setup
 
@@ -25,3 +30,16 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+## 相关文档
+
+
+https://www.cnblogs.com/strangerqt/p/3745426.html
+
+http://www.w3school.com.cn/xmldom/dom_range.asp
+
+https://segmentfault.com/a/1190000005869372
+
+
+
