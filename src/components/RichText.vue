@@ -2,31 +2,30 @@
   <div>
     <h1>sample Rich Text</h1>
     <div class="rich-test-wrapper">
-      <div class="tool-bar">
-        <ul>
-          <li @click="insertSpecChar()">特殊字符</li>
-          <li @click="supOrSubHandle('sup')">上标</li>
-          <li @click="supOrSubHandle('sub')">下标</li>
-        </ul>
-      </div>
+      <tool-bar @command="doCommand"></tool-bar>
       <div
         contenteditable="true"
         ref="sample-rich-text"
         class="sample-rich-text"
+        v-html="content"
         @click="recordLastEditRange"
         @input="recordLastEditRange"></div>
     </div>
   </div>
 </template>
 <script>
+  import ToolBar from './ToolBar.vue'
+
   export default {
     name: 'rich-text',
     data() {
       return {
         lastEditRange: null,
-        lastEditSelection: null
+        lastEditSelection: null,
+        content: 'lallalalla测试测试'
       }
     },
+    components: {ToolBar},
     methods: {
       /**
        * 记录最后一次光标位置
@@ -39,7 +38,7 @@
        * 插入一个字符
        */
       insertSpecChar(char) {
-        this.$refs['sample-rich-text'].focus();
+        this.$refs['sample-rich-text'].focus()
         let selection = window.getSelection()
         if (this.lastEditRange) {
           // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
@@ -68,42 +67,41 @@
         this.lastEditRange = selection.getRangeAt(0)
       },
       /**
-       * 上下标操作
+       * 工具条操作
        * @param type
        */
-      supOrSubHandle(type) {
-        console.log('supOrSubHandle', type)
+      doCommand(type) {
         let selection = window.getSelection()
         if (this.lastEditRange) {
           // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
           selection.removeAllRanges()
           selection.addRange(this.lastEditRange)
         }
-        let range = selection.getRangeAt(0)
         let txt = selection.toString()
-        if (txt) {
-          console.log('anchorNode', selection.anchorNode, selection.anchorNode.parentNode)
-          console.log('focusNode', selection.focusNode, selection.focusNode.parentNode)
-          console.log('commonAncestorContainer', range.commonAncestorContainer)
-          let sup = document.createElement(type)
-          // 同一个父文本节点
-          if (selection.anchorNode === selection.focusNode) {
-            range.surroundContents(sup)
-          } else {
-            // 不同的父文本节点
-//            let extractContents = range.extractContents()
-//            sup.appendChild(extractContents)
-//            console.log('sup', sup)
-//            selection.anchorNode.insertAdjacentHTML('beforeend', sup.outerHTML)
-//            selection.focusNode.parentElement.insertAdjacentElement('beforeEnd', sup)
-            window.alert('暂不支持不同的父文本节点上标／下标操作')
-          }
-        }
-      }
-    },
-    mounted() {
+        console.log('txt', txt)
+        switch (type) {
+          case 'sub':
+            document.execCommand('Subscript', false)
+            break
+          case 'sup':
+            console.log('sup')
+            document.execCommand('Superscript', false)
+            break
+          case 'underline':
+            document.execCommand('Underline', false, null)
+            break
+          case 'bold':
+            document.execCommand('Bold', false, null)
+            break
+          case 'bgColor':
+            document.execCommand('BackColor', false, 'red')
+            break
 
-    }
+          default:
+            break
+        }
+      },
+    },
   }
 </script>
 
@@ -131,5 +129,6 @@
     width: 100%;
     height: 100%;
     border: 1px solid #666;
+    text-align: left
   }
 </style>
